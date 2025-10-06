@@ -8,11 +8,15 @@ services:
       - SEARXNG_API_URL=http://searxng:8080
       - DATA_DIR=/home/perplexica
     ports:
-      - 3007:3000
+      - 3000:3000
     networks:
       - perplexica-network
     volumes:
       - backend-dbstore:/home/perplexica/data
       - uploads:/home/perplexica/uploads
-      - ./config.toml:/home/perplexica/config.toml
+      -
+        type: bind
+        source: ./config.toml
+        target: /home/perplexica/config.toml
+        content: "[GENERAL]\nSIMILARITY_MEASURE = \"cosine\" # \"cosine\" or \"dot\"\nKEEP_ALIVE = \"5m\" # How long to keep Ollama models loaded into memory. (Instead of using -1 use \"-1m\")\n\n[MODELS.OPENAI]\nAPI_KEY = \"\"\n\n[MODELS.GROQ]\nAPI_KEY = \"\"\n\n[MODELS.ANTHROPIC]\nAPI_KEY = \"\"\n\n[MODELS.GEMINI]\nAPI_KEY = \"\"\n\n[MODELS.CUSTOM_OPENAI]\nAPI_KEY = \"\"\nAPI_URL = \"\"\nMODEL_NAME = \"\"\n\n[MODELS.OLLAMA]\nAPI_URL = \"\" # Ollama API URL - http://host.docker.internal:11434\n\n[MODELS.DEEPSEEK]\nAPI_KEY = \"\"\n\n[MODELS.AIMLAPI]\nAPI_KEY = \"\" # Required to use AI/ML API chat and embedding models\n\n[MODELS.LM_STUDIO]\nAPI_URL = \"\" # LM Studio API URL - http://host.docker.internal:1234\n\n[MODELS.LEMONADE]\nAPI_URL = \"\" # Lemonade API URL - http://host.docker.internal:8000\nAPI_KEY = \"\" # Optional API key for Lemonade\n\n[API_ENDPOINTS]\nSEARXNG = \"\" # SearxNG API URL - http://localhost:32768"
     restart: unless-stopped
